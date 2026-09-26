@@ -1,47 +1,36 @@
-# Learnity
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-AI-powered adaptive learning platform — monorepo containing the Next.js 15 frontend (`apps/web`) and the Node/TypeScript backend (`apps/api`).
+## Getting Started
 
-## Stack
-
-| App         | Tech                                                                 |
-| ----------- | -------------------------------------------------------------------- |
-| `apps/web`  | Next.js 15 (App Router), React 19, Tailwind v4, Zustand, TanStack Query, Framer Motion, GSAP, Lenis, tsParticles |
-| `apps/api`  | Fastify, Prisma + PostgreSQL 16 (pgvector), Redis 7, BullMQ, Socket.IO, Anthropic Claude, Zod |
-
-## Quickstart
+First, run the development server:
 
 ```bash
-cp .env.example .env          # fill in secrets (Anthropic key optional in dev)
-docker compose up -d postgres redis
-npm install
-npm run db:migrate            # prisma migrate dev
-npm run db:seed               # Algebra I concept DAG + curated item bank
-npm run dev:api               # http://localhost:4000
-npm run dev:web               # http://localhost:3000
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
-## Architecture
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-```
-Diagnostic (CAT/IRT) → Learner model (BKT per concept)
-  → DAG-aware gap detection → Learning path recompute (BullMQ job)
-  → Adaptive quiz (live theta) → learner model update → …
-```
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-- **Learner model is the product**: per-concept `masteryProbability` (BKT) + `abilityEstimate` (2PL IRT theta).
-- **Gap detection walks the prerequisite DAG backward** — the actionable gap is the prerequisite, not the downstream concept.
-- **Every recommendation carries a cached rationale string** (AI-generated, keyed on concept + difficulty band + misconception signature).
-- **Highest-risk math (IRT, BKT, SM-2, gap detection) is unit-tested with known input/output pairs** — see `apps/api/src/engines/*.test.ts`.
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Key entry points
+## Learn More
 
-- `apps/api/src/server.ts` — Fastify app + Socket.IO tutor namespace
-- `apps/api/src/engines/` — IRT, BKT, CAT, gap detection, learning path, SM-2
-- `apps/api/src/services/ai/` — Claude integration, cache, tutor socket service
-- `apps/web/src/app/` — route groups per spec: `(root)`, `(auth)`, `(dashboard)`, `(learn)`, `(social)`, `(educator)`
-- `apps/web/src/components/features/` — QuizEngine, DiagnosticAssessment, LearningPathTree, MasteryHeatmap, AITutorOverlay, …
+To learn more about Next.js, take a look at the following resources:
 
-## Status
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-Scaffold — all modules are typed stubs with documented interfaces, ready for phased implementation per the execution checklists in each spec.
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
