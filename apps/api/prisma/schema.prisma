@@ -1,0 +1,287 @@
+// Learnity domain schema — the learner model is the product.
+// Gap detection unit is Concept (not Topic). Prerequisites form a DAG.
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  // NOTE: pgvector extension (tutor-context embeddings) re-adds here when
+  // the embedding pipeline lands; base binaries do not ship the extension.
+}
+
+// ---------------------------------------------------------------- curriculum
+
+model Subject {
+  id     String  @id @default(cuid())
+  slug   String  @unique
+  name   String  @unique
+  topics Topic[]
+}
+
+model Topic {
+  id        String    @id @default(cuid())
+  subjectId String
+  subject   Subject   @relation(fields: [subjectId], references: [id])
+  name      String
+  order     Int       @default(0)
+  concepts  Concept[]
+
+  @@unique([subjectId, name])
+}
+
+model Concept {
+  id             String   @id @default(cuid())
+  slug           String   @unique
+  topicId        String
+  topic          Topic    @relation(fields: [topicId], references: [id])
+  name           String
+  description    String?
+  prerequisites  Concept[] @relation("ConceptPrereqs")
+  requiredBy     Concept[] @relation("ConceptPrereqs")
+  curriculumOrder Int      @default(0)
+  questions      Question[]
+  learnerStates  LearnerConceptState[]
+  reviewItems    ReviewItem[]
+
+  @@unique([topicId, name])
+}
+
+// ---------------------------------------------------------------- questions
+
+model Question {
+  id             String   @id @default(cuid())
+  slug           String   @unique
+  conceptId      String
+  concept        Concept  @relation(fields: [conceptId], references: [id])
+  /// IRT b-parameter (difficulty), continuous
+  difficulty     Float
+  /// IRT a-parameter (discrimination)
+  discrimination Float    @default(1.0)
+  /// mcq | short_answer | code | numeric
+  type           QuestionType
+  body           String
+  /// JSON: choices for mcq, expected value for numeric, etc.
+  payload        Json
+  answerKey      String
+  explanation    String?
+  /// curated | ai
+  generatedBy    GeneratedBy @default(curated)
+  version        Int      @default(1)
+  /// true once the AI quality-check pass validates the item
+  qcPassed       Boolean  @default(true)
+  attempts       Attempt[]
+
+  @@index([conceptId, difficulty])
+}
+
+enum QuestionType {
+  mcq
+  short_answer
+  code
+  numeric
+}
+
+enum GeneratedBy {
+  curated
+  ai
+}
+
+// ---------------------------------------------------------------- students
+
+model Student {
+  id                   String   @id @default(cuid())
+  email                String   @unique
+  name                 String
+  passwordHash         String
+  createdAt            DateTime @default(now())
+  /// arbitrary learning preferences: language, font scale, reduce motion…
+  learningPreferences  Json     @default("{}")
+  /// per-subject theta scores
+  currentAbilityVector Json     @default("{}")
+  attempts             Attempt[]
+  quizSessions         QuizSession[]
+  learnerStates        LearnerConceptState[]
+  reviewItems          ReviewItem[]
+  badges               StudentBadge[]
+  cohorts              CohortMembership[]
+  learningPaths        LearningPath[]
+  leaderboardOptIn     Boolean  @default(false)
+}
+
+model Cohort {
+  id        String            @id @default(cuid())
+  name      String
+  educator  Educator          @relation(fields: [educatorId], references: [id])
+  educatorId String
+  students  CohortMembership[]
+}
+
+model Educator {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  passwordHash String
+  cohorts   Cohort[]
+}
+
+model CohortMembership {
+  studentId String
+  cohortId  String
+  student   Student @relation(fields: [studentId], references: [id])
+  cohort    Cohort  @relation(fields: [cohortId], references: [id])
+
+  @@id([studentId, cohortId])
+}
+
+// ---------------------------------------------------------------- attempts
+
+model QuizSession {
+  id                 String    @id @default(cuid())
+  studentId          String
+  student            Student   @relation(fields: [studentId], references: [id])
+  /// diagnostic | adaptive_practice | mastery_check
+  mode               SessionMode
+  startedAt          DateTime  @default(now())
+  endedAt            DateTime?
+  startingDifficulty Float
+  endingDifficulty   Float?
+  gapsDetected       String[]  @default([])
+  attempts           Attempt[]
+
+  @@index([studentId, startedAt])
+}
+
+enum SessionMode {
+  diagnostic
+  adaptive_practice
+  mastery_check
+}
+
+model Attempt {
+  id                 String      @id @default(cuid())
+  studentId          String
+  student            Student     @relation(fields: [studentId], references: [id])
+  questionId         String
+  question           Question    @relation(fields: [questionId], references: [id])
+  quizSessionId      String?
+  quizSession        QuizSession? @relation(fields: [quizSessionId], references: [id])
+  isCorrect          Boolean
+  responseTimeMs     Int
+  /// optional self-report 1-5
+  confidenceRating   Int?
+  /// theta at the time of the attempt
+  difficultyAtAttempt Float
+  createdAt          DateTime    @default(now())
+
+  @@index([studentId, createdAt])
+  @@index([questionId])
+}
+
+// ---------------------------------------------------------------- learner model
+
+model LearnerConceptState {
+  studentId  String
+  conceptId  String
+  student    Student @relation(fields: [studentId], references: [id])
+  concept    Concept @relation(fields: [conceptId], references: [id])
+  /// Bayesian Knowledge Tracing posterior
+  masteryProbability Float @default(0)
+  /// IRT theta for this student x concept
+  abilityEstimate    Float @default(0)
+  attemptsCount      Int   @default(0)
+  lastAttemptAt      DateTime?
+  /// not_started | in_progress | gap_detected | mastered
+  status             ConceptStatus @default(not_started)
+  /// self-reported vs actual accuracy delta; positive = overconfident
+  confidenceCalibration Float @default(0)
+
+  @@id([studentId, conceptId])
+  @@index([status])
+}
+
+enum ConceptStatus {
+  not_started
+  in_progress
+  gap_detected
+  mastered
+}
+
+model LearningPath {
+  id          String   @id @default(cuid())
+  studentId   String
+  student     Student  @relation(fields: [studentId], references: [id])
+  /// ordered concept ids, recomputed on every learner-model update
+  queue       Json
+  /// per-concept rationale strings (explainability requirement)
+  rationale   Json     @default("{}")
+  generatedAt DateTime @default(now())
+
+  @@index([studentId, generatedAt])
+}
+
+// ---------------------------------------------------------------- spaced repetition (SM-2)
+
+model ReviewItem {
+  id         String   @id @default(cuid())
+  studentId  String
+  student    Student  @relation(fields: [studentId], references: [id])
+  conceptId  String
+  concept    Concept  @relation(fields: [conceptId], references: [id])
+  /// SM-2 state
+  easeFactor Float    @default(2.5)
+  interval   Int      @default(0) // days
+  repetitions Int     @default(0)
+  dueAt      DateTime @default(now())
+  lastRated  Rating?
+  createdAt  DateTime @default(now())
+
+  @@index([studentId, dueAt])
+}
+
+enum Rating {
+  again
+  hard
+  good
+  easy
+}
+
+// ---------------------------------------------------------------- gamification
+
+model Badge {
+  id       String         @id @default(cuid())
+  key      String         @unique
+  name     String
+  description String
+  students StudentBadge[]
+}
+
+model StudentBadge {
+  studentId String
+  badgeId   String
+  awardedAt DateTime @default(now())
+  student   Student @relation(fields: [studentId], references: [id])
+  badge     Badge   @relation(fields: [badgeId], references: [id])
+
+  @@id([studentId, badgeId])
+}
+
+// ---------------------------------------------------------------- AI cache
+
+model AIContentCache {
+  id            String   @id @default(cuid())
+  /// sha256 of (kind, conceptId, difficultyBand, misconceptionSignature)
+  cacheKey      String   @unique
+  /// explanation | practice_question | tutor_context
+  kind          String
+  conceptId     String?
+  difficultyBand String?
+  misconceptionSignature String?
+  content       Json
+  version       Int      @default(1)
+  createdAt     DateTime @default(now())
+  hits          Int      @default(0)
+}

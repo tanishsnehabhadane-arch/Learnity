@@ -1,0 +1,141 @@
+@import "tailwindcss";
+
+/*
+ * Learnity design tokens — Tailwind v4 @theme.
+ * Brutalist precision + glassmorphic fluidity + collegiate identity.
+ */
+@theme {
+  /* Neutrals */
+  --color-base: #f8f7f6;
+  --color-ink: #1a1a1a;
+  --color-border-brutal: #000000;
+
+  /* Accents */
+  --color-crimson: #ef4444;
+  --color-electric: #3b82f6;
+  --color-mastery: #22c55e;
+  --color-gap: #f59e0b;
+
+  /* Type */
+  --font-display: var(--font-collegiate), var(--font-anton), system-ui, sans-serif;
+  --font-tech: var(--font-orbitron), system-ui, sans-serif;
+  --font-body: var(--font-poppins), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+
+  /* Motion (mirrors lib/animations.ts spring presets) */
+  --ease-spring-interactive: cubic-bezier(0.34, 1.3, 0.64, 1);
+
+  /* Shadows */
+  --shadow-brutalist: 4px 4px 0px 0px rgba(0, 0, 0, 1);
+  --shadow-brutalist-sm: 2px 2px 0px 0px rgba(0, 0, 0, 1);
+  --shadow-floating: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.05);
+
+  /* Radius: brutalist-minimal */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
+}
+
+/* Dark-mode class strategy, persisted in useUIStore */
+.dark {
+  --color-base: #0f0f10;
+  --color-ink: #f5f5f5;
+  --color-border-brutal: #f5f5f5;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-base);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Custom cursor active state (TargetCursor mounts on fine pointers only) */
+html.has-custom-cursor,
+html.has-custom-cursor * {
+  cursor: none !important;
+}
+
+/* ---------------------------------------------------------------- utilities */
+
+@utility border-brutal {
+  border-width: 2px;
+  border-color: var(--color-border-brutal);
+}
+
+@utility shadow-brutal {
+  box-shadow: 4px 4px 0px 0px var(--color-border-brutal);
+}
+
+@utility shadow-brutal-sm {
+  box-shadow: 2px 2px 0px 0px var(--color-border-brutal);
+}
+
+@utility glass {
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+@utility glass-heavy {
+  background-color: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Focus ring never removed by brutalist styling (WCAG) */
+@utility focus-brutal {
+  outline: 2px solid var(--color-electric);
+  outline-offset: 2px;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--color-electric);
+  outline-offset: 2px;
+}
+
+/* 48px+ tap targets on touch devices */
+@media (pointer: coarse) {
+  button, a, input, select, [role="button"] {
+    min-height: 48px;
+    min-width: 48px;
+  }
+}
+
+/* ---------------------------------------------------------------- motion */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* incorrect-answer shake keyframes (Framer drives the JS variant) */
+@keyframes learnity-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+
+@keyframes learnity-flash {
+  0% { opacity: 0.35; }
+  100% { opacity: 0; }
+}
+
+/* KaTeX + highlight.js minimal tuning for the tutor renderer */
+.katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+}

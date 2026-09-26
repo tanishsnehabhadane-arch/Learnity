@@ -1,0 +1,23 @@
+{
+  "name": "learnity",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Learnity — AI-powered adaptive learning platform (frontend + backend monorepo)",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:api": "npm run dev --workspace @learnity/api",
+    "dev:web": "npm run dev --workspace @learnity/web",
+    "build": "npm run build --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "db:migrate": "npm run db:migrate --workspace @learnity/api",
+    "db:seed": "npm run db:seed --workspace @learnity/api"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

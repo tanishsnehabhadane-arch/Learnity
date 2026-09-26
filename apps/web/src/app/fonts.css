@@ -1,0 +1,13 @@
+/*
+ * Collegiate FLF — self-hosted @font-face (place woff2 files in /public/fonts).
+ * If the exact file is absent, the CSS var chain degrades to Anton → system sans
+ * without failing the build (see src/app/fonts.ts for the slot wiring).
+ */
+@font-face {
+  font-family: "Collegiate FLF";
+  src: url("/fonts/CollegiateFLF-Black.woff2") format("woff2"),
+       url("/fonts/CollegiateFLF-Bold.woff2") format("woff2");
+  font-weight: 700 900;
+  font-style: normal;
+  font-display: swap;
+}

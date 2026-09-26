@@ -1,0 +1,31 @@
+{
+  "brand": { "name": "Learnity" },
+  "nav": {
+    "home": "Inicio",
+    "analytics": "Análisis",
+    "planner": "Planificador",
+    "leaderboard": "Clasificación",
+    "forum": "Foro",
+    "aiTutor": "Tutor IA"
+  },
+  "hero": {
+    "kicker": "Aprendizaje adaptativo con IA",
+    "title": "Entrena mejor. Aprende más rápido.",
+    "subtitle": "Learnity se calibra a tu nivel exacto, encuentra tus lagunas reales a nivel de concepto y reconstruye tu ruta tras cada respuesta.",
+    "ctaPrimary": "Empezar calibración",
+    "ctaSecondary": "Explorar la plataforma"
+  },
+  "dashboard": {
+    "recommended": "Recomendado siguiente",
+   "streak": "Días de racha",
+    "xp": "XP",
+    "startQuiz": "Comenzar quiz adaptativo",
+    "reviewDue": "Repasos pendientes hoy",
+    "noPath": "Completa tu diagnóstico para generar tu ruta de aprendizaje personal."
+  },
+  "common": {
+    "loading": "Cargando…",
+    "error": "Algo salió mal.",
+    "retry": "Reintentar"
+  }
+}

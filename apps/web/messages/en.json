@@ -1,0 +1,31 @@
+{
+  "brand": { "name": "Learnity" },
+  "nav": {
+    "home": "Home",
+    "analytics": "Analytics",
+    "planner": "Planner",
+    "leaderboard": "Leaderboard",
+    "forum": "Forum",
+    "aiTutor": "AI Tutor"
+  },
+  "hero": {
+    "kicker": "AI-powered adaptive learning",
+    "title": "Train smarter. Learn faster.",
+    "subtitle": "Learnity calibrates to your exact level, finds your real knowledge gaps at the concept level, and rebuilds your path after every answer.",
+    "ctaPrimary": "Start calibration",
+    "ctaSecondary": "Explore the platform"
+  },
+  "dashboard": {
+    "recommended": "Recommended next",
+    "streak": "Day streak",
+    "xp": "XP",
+    "startQuiz": "Start adaptive quiz",
+    "reviewDue": "Reviews due today",
+    "noPath": "Complete your diagnostic to generate your personal learning path."
+  },
+  "common": {
+    "loading": "Loading…",
+    "error": "Something went wrong.",
+    "retry": "Retry"
+  }
+}
