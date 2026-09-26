@@ -1,0 +1,88 @@
+npm warn config ignoring workspace config at Z:\Learnity\apps\web/.npmrc
+   ▲ Next.js 15.5.26
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.22.168:3000
+
+ ✓ Starting...
+ ○ (serwist) Serwist is disabled.
+ ○ (serwist) Serwist is disabled.
+ ✓ Ready in 14.9s
+ ○ Compiling / ...
+ ✓ Compiled / in 20.4s (3562 modules)
+ GET / 200 in 23123ms
+ GET / 200 in 249ms
+ ○ Compiling /login ...
+ ✓ Compiled /login in 2.1s (3462 modules)
+ GET /login 200 in 3513ms
+ ○ Compiling /signup ...
+ ✓ Compiled /signup in 1053ms (3455 modules)
+ GET /signup 200 in 1759ms
+ ○ Compiling /dashboard ...
+ ✓ Compiled /dashboard in 1015ms (3471 modules)
+ GET /dashboard 200 in 1627ms
+ ○ Compiling /analytics ...
+ ✓ Compiled /analytics in 1026ms (3478 modules)
+ GET /analytics 200 in 2113ms
+ ○ Compiling /planner ...
+ ✓ Compiled /planner in 3.2s (3487 modules)
+ GET /planner 200 in 4267ms
+ ○ Compiling /review ...
+ ✓ Compiled /review in 979ms (3494 modules)
+ GET /review 200 in 1583ms
+ ○ Compiling /settings ...
+ ✓ Compiled /settings in 1235ms (3501 modules)
+ GET /settings 200 in 1966ms
+ ○ Compiling /leaderboard ...
+ ✓ Compiled /leaderboard in 1166ms (3508 modules)
+ GET /leaderboard 200 in 1971ms
+ ○ Compiling /forum ...
+ ✓ Compiled /forum in 1006ms (3515 modules)
+ GET /forum 200 in 1646ms
+ ○ Compiling /diagnostic ...
+ ✓ Compiled /diagnostic in 1413ms (3534 modules)
+ GET /diagnostic 200 in 1973ms
+ ○ Compiling /playground ...
+ ✓ Compiled /playground in 1186ms (3543 modules)
+ GET /playground 200 in 1665ms
+ ○ Compiling /offline ...
+ ✓ Compiled /offline in 1131ms (3545 modules)
+ GET /offline 200 in 2035ms
+ GET / 200 in 667ms
+ ○ Compiling /[courseId] ...
+ ✓ Compiled /[courseId] in 5.2s (3550 modules)
+ GET /favicon.ico 200 in 9529ms
+ GET /dashboard 200 in 163ms
+ ○ Compiling /_not-found ...
+ GET /favicon.ico 200 in 535ms
+ ✓ Compiled /_not-found in 4.6s (3555 modules)
+ GET /icons/icon-192.png 404 in 6221ms
+ GET /diagnostic 200 in 173ms
+ GET /icons/icon-192.png 404 in 725ms
+ GET /favicon.ico 200 in 756ms
+ GET /icons/icon-192.png 404 in 788ms
+ GET /favicon.ico 200 in 868ms
+ GET /analytics 200 in 213ms
+ GET /icons/icon-192.png 404 in 571ms
+ GET /favicon.ico 200 in 593ms
+ GET /planner 200 in 157ms
+ GET /icons/icon-192.png 404 in 688ms
+ GET /favicon.ico 200 in 797ms
+ GET /leaderboard 200 in 196ms
+ GET /icons/icon-192.png 404 in 568ms
+ GET /favicon.ico 200 in 670ms
+ GET /leaderboard 200 in 101ms
+ GET /icons/icon-192.png 404 in 331ms
+ GET /forum 200 in 155ms
+ GET /icons/icon-192.png 404 in 711ms
+ GET /favicon.ico 200 in 740ms
+ GET /analytics 200 in 127ms
+ GET /favicon.ico 200 in 497ms
+ GET /icons/icon-192.png 404 in 206ms
+ GET /dashboard 200 in 121ms
+ GET /favicon.ico 200 in 530ms
+ GET /icons/icon-192.png 404 in 184ms
+ GET /planner 200 in 103ms
+ GET /favicon.ico 200 in 800ms
+ GET /icons/icon-192.png 404 in 331ms
+ GET / 200 in 442ms
+ GET /favicon.ico 200 in 686ms

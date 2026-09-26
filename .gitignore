@@ -1,0 +1,33 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# builds
+dist/
+build/
+.next/
+out/
+*.tsbuildinfo
+.turbo/
+
+# env
+.env
+.env.local
+.env.*.local
+
+# prisma
+apps/api/prisma/migrations/**/migration_lock.toml.bak
+
+# generated
+apps/api/src/generated/
+apps/web/src/generated/
+apps/web/public/sw.js
+apps/web/public/swe-worker*.js
+.serwist/
+
+# misc
+.DS_Store
+*.log
+coverage/
+.vercel
+next-env.d.ts
